@@ -17,24 +17,22 @@ import com.acme.payment.service.provider.model.PaymentResult;
 import com.acme.payment.util.mapper.PaymentMapper;
 
 @Service
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentServiceImpl extends BasePaymentService implements PaymentService {
 
 	private final PaymentRepository paymentRepository;
-	private final PaymentLogRepository paymentLogRepository;
 	private final ProviderServiceFactory providerServiceFactory;
 	private final PaymentMapper paymentMapper;
 	
 	public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentLogRepository paymentLogRepository, ProviderServiceFactory providerServiceFactory, PaymentMapper paymentMapper) {
-		super();
+		super(paymentLogRepository, paymentRepository);
 		this.paymentRepository = paymentRepository;
-		this.paymentLogRepository = paymentLogRepository;
 		this.providerServiceFactory = providerServiceFactory;
 		this.paymentMapper = paymentMapper;
 	}
 
 
 	@Override
-	public void pay(PostPaymentRequest paymentReq) {
+	public PaymentResult savePaymentAndCallProvider(PostPaymentRequest paymentReq) {
 		ProviderPaymentService providerService = providerServiceFactory.getProviderPaymentService(paymentReq.getProvider());
 		Payment payment = null;
 		if (paymentReq.getUuid() != null) {
@@ -49,19 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
 		InitiatePaymentContext context = new InitiatePaymentContext(paymentReq, method);
 		PaymentResult result = providerService.initiatePayment(context);
 		result.setPayment(payment);
-		PaymentLog paymentLog = createPaymentLog(result);
-		paymentLogRepository.save(paymentLog);
-	}
-
-
-	private PaymentLog createPaymentLog(PaymentResult result) {
-		PaymentLog paymentLog = new PaymentLog();
-		paymentLog.setPayment(result.getPayment());
-		paymentLog.setOperation("myOperationCallTowardsZiraatV2");
-		paymentLog.setRawRequest(result.getRawRequest());
-		paymentLog.setRawResponse(result.getRawResponse());
-		paymentLog.setTxnTime(result.getTxnTime());
-		return paymentLog;
+		return result;
 	}
 
 
