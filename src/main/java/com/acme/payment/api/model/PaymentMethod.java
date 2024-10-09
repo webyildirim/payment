@@ -3,6 +3,7 @@ package com.acme.payment.api.model;
 import java.util.List;
 
 import com.acme.payment.enums.Provider;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -16,6 +17,7 @@ public class PaymentMethod {
 	private String serviceUrl;
 	private Short connectionTimeout;
 	private String apiKey;
+	@JsonIgnore
 	private String password;
 	private Boolean refundable;
 	private Short allowedInstallment;
