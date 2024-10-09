@@ -1,4 +1,4 @@
-Thanks to apidoc/swagger; we can check / try the schemas of APIs via the url following http://localhost:8080/swagger-ui/index.html 
+Thanks to apidoc/swagger; we can check the schemas / try APIs out via the url following http://localhost:8080/swagger-ui/index.html 
 
 In order to run the environment;
  - Make sure there is no application run on 8080 OR 5432 since docker composition is going to use aforementioned ports.
