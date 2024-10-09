@@ -1,0 +1,40 @@
+services:
+  app:
+    image: 'payment:0.1'
+    build: ./
+    container_name: payment
+    ports:
+     - "8080:8080"
+    networks:
+      - payment
+    depends_on:
+      - postgres-db
+    environment:
+     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/postgres
+
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks:
+      - payment
+    volumes:
+      - PGDATA:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  payment:
+    external: false
+    name: payment
+
+volumes:
+  PGDATA:
