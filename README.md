@@ -5,3 +5,4 @@ In order to run the environment;
  - Once pulled the repo, via terminal; go to directory same as 'docker-compose.yml' file. Then please run the following command via terminal 'docker-compose up'
  
  
+<img width="945" alt="image" src="https://github.com/user-attachments/assets/ff860e4a-e51f-4f02-930b-abeb33b8a4f4">
